@@ -8,7 +8,7 @@ ZONE_TPL = """; {domainname}
      240         ; Expire
      120  )      ; Minimum
 
-@                                        IN NS      ns.ffrn.de
+@                                        IN NS      ns.ffrn.de.
 
 """
 LINE_TPL = """{name:<40} IN {type:<7} {data}"""
