@@ -60,7 +60,7 @@ serial = int(time.time())
 f = open(ZONEFILE, "w")
 f.write(ZONE_TPL.format(
     domainname=DOMAIN,
-    hostmastermail=(HOSTMASTERMAIL.replace("@",".")),
+    hostmastermail=(HOSTMASTERMAIL.replace("@",".")+"."),
     serial=serial,
     ))
 f.write('\n'.join(lines) + '\n')
