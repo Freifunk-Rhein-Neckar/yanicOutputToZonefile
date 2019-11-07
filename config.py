@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 ZONE_TPL = """; {domainname}
-@ 100 IN SOA ns1 {hostmastermail} (
+@ 100 IN SOA ns.ffrn.de. {hostmastermail} (
      {serial:010d}  ; Serial
      120         ; Refresh
      60          ; Retry
