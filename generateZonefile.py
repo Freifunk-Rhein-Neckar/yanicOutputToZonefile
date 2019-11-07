@@ -2,7 +2,7 @@
 import urllib.request
 import json
 import re
-import datetime
+import time
 from config import ZONE_TPL, LINE_TPL, ZONEFILE, DOMAIN, HOSTMASTERMAIL, MESHVIEWERJSON, GETWARNINGS
 
 class ffnode:
@@ -54,22 +54,8 @@ nodes.sort(key=lambda x: x.hostname)
 for node in nodes:
     lines.append(LINE_TPL.format(name=node.hostname, type="AAAA", data=node.address))
 
-# get current serial number and increment using yyyymmddXX as format
-cdate = datetime.datetime.now().strftime('%Y%m%d')
-serial = cdate + "00"
-try:
-    fn = open(ZONEFILE, "r")
-    sn = re.findall('\s*([0-9]{8,12})\s*;\s*Serial\s*', fn.read())
-    if len(sn) > 0:
-        serial = sn[0]
-    fn.close()
-except FileNotFoundError:
-    pass
-if cdate == serial[:8] and serial[8:].isdigit():
-    serial = serial[:8] + '{:02d}'.format(int(serial[8:])+1)[:2]
-# TODO: more than 100 renews aren't possibly (overflow): therefore it should only run all 15 minutes 25H * (60 Min /15) = 100
-# TODO: with the following it simple doesn't renew more then once every 15 Minutes:
-# serial = datetime.datetime.now().strftime('%Y%m%d') + str(int((datetime.datetime.today().hour*60+datetime.datetime.today().minute)/15))
+# get a serial number
+serial = int(time.time())
 
 f = open(ZONEFILE, "w")
 f.write(ZONE_TPL.format(
