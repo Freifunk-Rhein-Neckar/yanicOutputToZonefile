@@ -47,11 +47,14 @@ with urllib.request.urlopen(MESHVIEWERJSON) as url:
         elif GETWARNINGS:
             print("not valid: \t\t" + node["hostnameLower"])
 
-# remove duplicates
-nodes = list(set(nodes))
-# TODO: Remove duplicates responsibly, choose firstseen
+# sort by hostname and after that firstseen. Purpose is to keep only the first apperance of a hostname
+nodes.sort(key=lambda x: (x.hostname, x.firstseen))
 
-nodes.sort(key=lambda x: x.hostname)
+# remove duplicates from the list
+nodes = list(set(nodes))
+
+# sort again, since set doesn't keep the order
+nodes.sort(key=lambda x: (x.hostname))
 
 for node in nodes:
     lines.append(LINE_TPL.format(name=node.hostname, type="AAAA", data=node.address))
