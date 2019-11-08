@@ -5,6 +5,8 @@ import re
 import time
 from config import ZONE_TPL, LINE_TPL, ZONEFILE, DOMAIN, HOSTMASTERMAIL, MESHVIEWERJSON, GETWARNINGS
 
+IPv6regex = "(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))"
+
 class ffnode:
     def __init__(self, hostname, address, firstseen):
         self.hostname = hostname
@@ -31,7 +33,7 @@ with urllib.request.urlopen(MESHVIEWERJSON) as url:
                 # loop over all adresses
                 for address in node["addresses"]:
                     # don't use unicast addresses or the dns server ip of a gateway
-                    if address[:2] != "fe" and address[-4:] !="::53":
+                    if address[:2] != "fe" and address[-4:] !="::53" and re.match(IPv6regex,address):
                         nodes.append(ffnode(node["hostnameLower"], address, node["firstseen"]))
                         # print("\t\t\t\t" + node["hostnameLower"] + ": " + address)
                         break
