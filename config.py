@@ -13,8 +13,6 @@ ZONE_TPL = """; {domainname}
 """
 LINE_TPL = """{name:<40} IN {type:<7} {data}"""
 
-ZONEFILE = "nameserver.txt"
-
 DOMAIN = "nodes.ffrn.de"
 
 # dots in the part before the @ need to be escaped: . becomes \.

@@ -62,7 +62,7 @@ for node in nodes:
 # get a serial number
 serial = int(time.time())
 
-f = open(ZONEFILE, "w")
+f = open(DOMAIN+".zone", "w")
 f.write(ZONE_TPL.format(
     domainname=DOMAIN,
     hostmastermail=(HOSTMASTERMAIL.replace("@",".")+"."),
@@ -70,10 +70,3 @@ f.write(ZONE_TPL.format(
     ))
 f.write('\n'.join(lines) + '\n')
 f.close()
-
-
-# print("----------------------------------")
-# f = open(ZONEFILE, "r")
-# print(f.read())
-# f.close()
-# print("----------------------------------")
