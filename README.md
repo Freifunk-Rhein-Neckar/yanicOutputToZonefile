@@ -9,7 +9,7 @@ and outputs a zonefile for a "node domain".
 
 
 ### Hostname Limitations:
-+ must only contain letters a-z, numbers, german umlauts (äöü) and the german eszett (ß)
++ must only contain letters a-z, numbers, german umlauts (äöü)
 + must not start or end with a dash (-)
 
 ### not valid are:
