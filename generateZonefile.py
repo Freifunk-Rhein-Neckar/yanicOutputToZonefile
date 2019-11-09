@@ -29,7 +29,8 @@ with urllib.request.urlopen(MESHVIEWERJSON) as url:
     for node in data["nodes"]:
         node["hostnameLower"] = node["hostname"].lower()
         # look if the hostname can formally be a subdomain
-        if re.match('^[0-9a-z]([0-9a-z-]{0,38}[0-9a-z])?$', node["hostnameLower"]):
+        if re.match('^[0-9a-zäöüß]([0-9a-zäöüß-]{0,38}[0-9a-zäöüß])?$', node["hostnameLower"]):
+            node["hostnameLower"] = node["hostnameLower"].encode('idna').decode('utf-8')
             if "addresses" in node and len(node["addresses"])>=1:
                 # loop over all adresses
                 for address in node["addresses"]:
