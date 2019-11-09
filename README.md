@@ -15,5 +15,6 @@ and outputs a zonefile for a "node domain".
 ### not valid are:
 - spaces ( )
 - underscores (_)
+- the german eszett (ß) - due to python rewriting ß with ss ([Issue 17305: IDNA2008 encoding is missing](https://bugs.python.org/issue17305))
 - any other character
 
