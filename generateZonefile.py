@@ -61,12 +61,20 @@ nodes = list(set(nodes))
 # sort again, since set doesn't keep the order
 nodes.sort(key=lambda x: (x.hostname))
 
+hostnameList = []
 for node in nodes:
     lines.append(LINE_TPL.format(name=node.hostname, type="AAAA", data=node.address))
+    hostnameList.append(node.hostname)
 
 # get a serial number
 serial = int(time.time())
 
+# save json file with all generated subdomains
+f = open(DOMAIN+".json", "w")
+f.write(json.dumps({"timestamp": serial, "domain": DOMAIN, "nodes": hostnameList}))
+f.close()
+
+# save zone file for bind
 f = open(DOMAIN+".zone", "w")
 f.write(ZONE_TPL.format(
     domainname=DOMAIN,
