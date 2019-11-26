@@ -10,10 +10,14 @@ ZONE_TPL = """; {domainname}
 
 @                                        IN NS      ns.ffrn.de.
 
+next                                     IN AAAA    2a01:4f8:171:fcff::ffff
 """
 LINE_TPL = """{name:<40} IN {type:<7} {data}"""
 
 DOMAIN = "nodes.ffrn.de"
+
+# hostnames which aren't allowed (for example next-node)
+NOTALLOWED = ["next"]
 
 # dots in the part before the @ need to be escaped: . becomes \.
 HOSTMASTERMAIL = "hostmaster@nodes.ffrn.de"
