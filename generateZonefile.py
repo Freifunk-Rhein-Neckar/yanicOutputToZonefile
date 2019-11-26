@@ -31,11 +31,13 @@ with urllib.request.urlopen(MESHVIEWERJSON) as url:
         # look if the hostname can formally be a subdomain
         if re.match('^[0-9a-zäöü]([0-9a-zäöü-]{0,38}[0-9a-zäöü])?$', node["hostnameLower"]):
             node["hostnameLower"] = node["hostnameLower"].encode('idna').decode('utf-8')
+            # check if address field exists and contains at least one address
             if "addresses" in node and len(node["addresses"])>=1:
                 # loop over all adresses
                 for address in node["addresses"]:
                     # don't use unicast addresses or the dns server ip of a gateway
                     if address[:2] != "fe" and address[-4:] !="::53" and re.match(IPv6regex,address):
+                        # check if firstseen ist valid ISO 8601
                         if re.match(ISO8601regex, node["firstseen"]):
                             nodes.append(ffnode(node["hostnameLower"], address, node["firstseen"]))
                             # print("\t\t\t\t" + node["hostnameLower"] + ": " + address)
