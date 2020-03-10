@@ -10,7 +10,7 @@ ZONE_TPL = """; {domainname}
 
 @                                        IN NS      ns.ffrn.de.
 
-next                                     IN AAAA    2a01:4f8:171:fcff::ffff
+next                                     IN CNAME   nextnode.ffrn.de.
 """
 LINE_TPL = """{name:<40} IN {type:<7} {data}"""
 
@@ -20,8 +20,12 @@ DOMAIN = "nodes.ffrn.de"
 NOTALLOWED = ["next"]
 
 # dots in the part before the @ need to be escaped: . becomes \.
-HOSTMASTERMAIL = "hostmaster@nodes.ffrn.de"
+HOSTMASTERMAIL = "hostmaster@ffrn.de"
 
-MESHVIEWERJSON = "https://map.ffrn.de/data/meshviewer.json"
+# url from where to download the meshviewer.json
+MESHVIEWERJSON_URL = "https://map.ffrn.de/data/meshviewer.json"
+
+# local path, only used if MESHVIEWERJSONURL is empty
+MESHVIEWERJSON_LOCAL = "/var/www/meshviewer/build/data/meshviewer.json"
 
 GETWARNINGS = True
