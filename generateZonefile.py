@@ -64,7 +64,9 @@ def main():
             elif GETWARNINGS:
                 print("no address: \t" + node["hostnameLower"])
         elif GETWARNINGS:
-            print("not valid: \t\t" + node["hostnameLower"])
+            # really dirty workaround for python3.5 under debian 9 which seems to run into a problem with ß
+            print("not valid: \t", end='')
+            print(repr(node["hostnameLower"].encode())[2:-1])
 
     # sort by hostname and after that firstseen. Purpose is to keep only the first apperance of a hostname
     nodes.sort(key=lambda x: (x.hostname, x.firstseen))
