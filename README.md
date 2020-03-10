@@ -10,7 +10,7 @@ and outputs a zonefile for a "node domain".
 ## Installation
 
 - clone this repository
-- create a copy of the `config.example.py` with the name `config.py`
+- create a copy of the `config.example.py` with the name `config.py` and edit it
 - run it with `python3 generateZonefile.py`
 
 
@@ -30,7 +30,7 @@ and outputs a zonefile for a "node domain".
 
 It is probably better to run the following two parts separate:
 
-#### Generate Files
+#### generate Files
 ```bash
 #!/usr/bin/env bash
 
