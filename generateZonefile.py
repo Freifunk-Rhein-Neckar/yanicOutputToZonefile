@@ -54,7 +54,7 @@ def main():
                 # loop over all adresses
                 for address in node["addresses"]:
                     # don't use unicast addresses or the dns server ip of a gateway
-                    if address[:2] != "fe" and address[-4:] != "::53" and re.match(IPv6regex, address):
+                    if address[:2] != "fe" and address[:2] != "fd" and address[-4:] != "::53" and re.match(IPv6regex, address):
                         # check if firstseen ist valid ISO 8601
                         if re.match(ISO8601regex, node["firstseen"]):
                             # check if nodename isn't in list of not allowed names
