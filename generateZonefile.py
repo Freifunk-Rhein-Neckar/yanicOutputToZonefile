@@ -92,7 +92,20 @@ def main():
 
 
 def generate_node_hostname(node):
-    if not re.match("^[0-9a-zäöü]([0-9a-zäöü-]{0,38}[0-9a-zäöü])?$", node["hostnameLower"]):
+    node_hostname_regex = "^[0-9a-zäöü]([0-9a-zäöü-]{0,38}[0-9a-zäöü])?$"
+    node_replace_regex = "([^0-9a-zäöü])+"
+
+    # Replace not allowed characters with - to cleanup the hostname
+    replaced_hostname = re.sub(
+        node_replace_regex,
+        '-',
+        node["hostnameLower"]
+    ).strip('-')
+    if replaced_hostname != node["hostnameLower"]:
+        warning("replaced: \t" + node["hostnameLower"] + " with " + replaced_hostname)
+        node["hostnameLower"] = replaced_hostname
+
+    if not re.match(node_hostname_regex, node["hostnameLower"]):
         # Really dirty workaround for python3.5 under Debian 9 which seems to run into a problem with ß
         warning("not valid: \t", end='')
         warning(repr(node["hostnameLower"].encode())[2:-1])
