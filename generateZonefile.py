@@ -11,9 +11,9 @@ ISO8601regex = "^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[1
 
 
 class FFNode:
-    def __init__(self, hostname, address, firstseen):
+    def __init__(self, hostname, addresses, firstseen):
         self.hostname = hostname
-        self.address = address
+        self.addresses = addresses
         self.firstseen = firstseen
 
     def __eq__(self, other):
@@ -69,7 +69,8 @@ def main():
 
     hostname_list = []
     for node in nodes:
-        lines.append(LINE_TPL.format(name=node.hostname, type="AAAA", data=node.address))
+        for address in node.addresses:
+            lines.append(LINE_TPL.format(name=node.hostname, type="AAAA", data=address))
         hostname_list.append(node.hostname)
 
     # get a serial number
@@ -121,27 +122,37 @@ def generate_node_hostname(node):
         warning("no valid addr: \t" + node["hostname"])
         return
 
+    if len(node["addresses"]) > 20:
+        warning("too many addr: \t" + node["hostname"])
+        return
+
+    addresses_gua = []
+
     # Loop over all addresses
     for address in node["addresses"]:
-        # Don't use unicast addresses or the dns server ip of a gateway
+        # don't use link local addresses or the dns server ip of a gateway
         if address[:2] == "fe" \
-                or address[:2] == "fd" \
                 or address[-4:] == "::53" \
                 or not re.match(IPv6regex, address):
-            warning("false-Addr: \t" + node["hostnameLower"] + " " + address)
+            #warning("false-Addr: \t" + node["hostnameLower"] + " " + address)
             continue
 
-        # Check if firstseen ist valid ISO 8601
-        if not re.match(ISO8601regex, node["firstseen"]):
-            warning("false-fseen: \t" + node["hostnameLower"] + " " + node["firstseen"])
+        if address[:2] == "fd":
             continue
+        else:
+            addresses_gua.append(address)
 
-        # Check if nodename isn't in list of not allowed names
-        if node["hostnameLower"] in NOTALLOWED:
-            warning("not allowed: \t" + node["hostnameLower"] + " " + node["firstseen"])
-            return
+    # Check if firstseen ist valid ISO 8601
+    if not re.match(ISO8601regex, node["firstseen"]):
+        warning("false-fseen: \t" + node["hostnameLower"] + " " + node["firstseen"])
+        return
 
-        return FFNode(node["hostnameLower"], address, node["firstseen"])
+    # Check if nodename isn't in list of not allowed names
+    if node["hostnameLower"] in NOTALLOWED:
+        warning("not allowed: \t" + node["hostnameLower"] + " " + node["firstseen"])
+        return
+
+    return FFNode(node["hostnameLower"], addresses_gua, node["firstseen"])
 
 
 if __name__ == "__main__":
