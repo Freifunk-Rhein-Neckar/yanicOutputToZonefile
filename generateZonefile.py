@@ -126,6 +126,7 @@ def generate_node_hostname(node):
         warning("too many addr: \t" + node["hostname"])
         return
 
+    addresses_ula = []
     addresses_gua = []
 
     # Loop over all addresses
@@ -138,7 +139,7 @@ def generate_node_hostname(node):
             continue
 
         if address[:2] == "fd":
-            continue
+            addresses_ula.append(address)
         else:
             addresses_gua.append(address)
 
@@ -152,7 +153,7 @@ def generate_node_hostname(node):
         warning("not allowed: \t" + node["hostnameLower"] + " " + node["firstseen"])
         return
 
-    return FFNode(node["hostnameLower"], addresses_gua, node["firstseen"])
+    return FFNode(node["hostnameLower"], (addresses_gua if addresses_gua else addresses_ula ), node["firstseen"])
 
 
 if __name__ == "__main__":
