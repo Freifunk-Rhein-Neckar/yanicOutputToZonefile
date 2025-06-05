@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 ZONE_TPL = """; {domainname}
 @ 100 IN SOA ns.ffrn.de. {hostmastermail} (
