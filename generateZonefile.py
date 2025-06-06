@@ -3,6 +3,8 @@ import urllib.request
 import json
 import re
 import time
+import os
+import argparse
 from config import ZONE_TPL, LINE_TPL, DOMAIN, HOSTMASTERMAIL, MESHVIEWERJSON_URL, MESHVIEWERJSON_LOCAL, GETWARNINGS, \
     NOTALLOWED
 
@@ -42,6 +44,20 @@ def get_json_from_file(path):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Generate zone files for Freifunk.")
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default=".",
+        help="Directory to save the output files (default: current directory)."
+    )
+    args = parser.parse_args()
+
+    output_dir = args.output_dir
+
+    # Ensure the output directory exists
+    os.makedirs(output_dir, exist_ok=True)
+
     lines = []
     nodes = []
 
@@ -77,20 +93,19 @@ def main():
     serial = int(time.time())
 
     # save json file with all generated subdomains
-    f = open(DOMAIN + ".json", "w")
-    f.write(json.dumps({"timestamp": serial, "domain": DOMAIN, "nodes": hostname_list}))
-    f.close()
+    json_path = os.path.join(output_dir, f"{DOMAIN}.json")
+    with open(json_path, "w") as f:
+        f.write(json.dumps({"timestamp": serial, "domain": DOMAIN, "nodes": hostname_list}))
 
     # save zone file for bind
-    f = open(DOMAIN + ".zone", "w")
-    f.write(ZONE_TPL.format(
-        domainname=DOMAIN,
-        hostmastermail=(HOSTMASTERMAIL.replace("@", ".") + "."),
-        serial=serial,
-    ))
-    f.write('\n'.join(lines) + '\n')
-    f.close()
-
+    zone_path = os.path.join(output_dir, f"{DOMAIN}.zone")
+    with open(zone_path, "w") as f:
+        f.write(ZONE_TPL.format(
+            domainname=DOMAIN,
+            hostmastermail=(HOSTMASTERMAIL.replace("@", ".") + "."),
+            serial=serial,
+        ))
+        f.write('\n'.join(lines) + '\n')
 
 def generate_node_hostname(node):
     node_hostname_regex = "^[0-9a-zäöü]([0-9a-zäöü-]{0,38}[0-9a-zäöü])?$"
