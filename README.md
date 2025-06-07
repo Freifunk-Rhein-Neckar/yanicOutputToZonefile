@@ -4,7 +4,7 @@
 a subdomain which contains all the Freifunk Router of a Freifunk community so that they are 
 accesible with a name.
 
-It uses a http request to get a meshviewer.json, extracts all the valid hostnames 
+It uses a http request to get a meshviewer.json, extracts all the valid hostnames and nodeids
 and outputs a zonefile for a "node domain".
 
 ## Installation

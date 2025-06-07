@@ -11,8 +11,9 @@ ISO8601regex = r"^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[
 
 
 class FFNode:
-    def __init__(self, hostname, addresses, firstseen):
+    def __init__(self, hostname, nodeid, addresses, firstseen):
         self.hostname = hostname
+        self.nodeid = nodeid
         self.addresses = addresses
         self.firstseen = firstseen
 
@@ -70,8 +71,13 @@ def main():
     hostname_list = []
     for node in nodes:
         for address in node.addresses:
-            lines.append(LINE_TPL.format(name=node.hostname, type="AAAA", data=address))
-        hostname_list.append(node.hostname)
+            lines.append(LINE_TPL.format(name=node.nodeid, type="AAAA", data=address))
+        
+        if(node.hostname != node.nodeid):
+            lines.append(LINE_TPL.format(name=node.hostname, type="CNAME", data=node.nodeid))
+            hostname_list.append(node.hostname)                 
+
+        hostname_list.append(node.nodeid)
 
     # get a serial number
     serial = int(time.time())
@@ -153,7 +159,9 @@ def generate_node_hostname(node):
         warning("not allowed: \t" + node["hostnameLower"] + " " + node["firstseen"])
         return
 
-    return FFNode(node["hostnameLower"], (addresses_gua if addresses_gua else addresses_ula ), node["firstseen"])
+    return FFNode(node["hostnameLower"], node["node_id"], (addresses_gua if addresses_gua else addresses_ula ), node["firstseen"])
+
+
 
 
 if __name__ == "__main__":
